@@ -34,6 +34,7 @@ export const signRefreshToken = (
   uid: string,
   username: ICurrentUser['username']
 ) => {
+  // TODO - move from redis to mongodb
   return new Promise((resolve, reject) => {
     const payload = { username };
     const secret = process.env.REFRESH_TOKEN_SECRET!;
@@ -86,6 +87,7 @@ export const verifyAccessToken = (
 };
 
 export const verifyRefreshToken = (refreshToken: string) => {
+  // TODO - move from redis to mongodb
   return new Promise((resolve, reject) => {
     try {
       const { sub: uid, username } = jwt.verify(

@@ -132,9 +132,8 @@ export const forgotPassword: RequestHandler = async (req, res, next) => {
     // create requestbody and token then store it in redis ds
     const resetPasswordToken = nanoid();
     const userId = user.id;
-    const request = JSON.stringify({ userId, resetPasswordToken });
-    await setResetPasswordToken(request, resetPasswordToken);
-
+    console.log(resetPasswordToken, userId, 'TEST***');
+    await setResetPasswordToken(userId, resetPasswordToken);
     // send reset password email
     const resetPasswordLink = `${process.env
       .CLIENT_BASE_URL!}/reset_password/${resetPasswordToken}`;

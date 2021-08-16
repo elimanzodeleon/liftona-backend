@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 dotenv.config({ path: path.resolve(__dirname, '../.env.local') });
 
-import express, { Response } from 'express';
+import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
@@ -11,13 +11,12 @@ import userRoutes from './routes/users.routes';
 import workoutRoutes from './routes/workouts.routes';
 import homeFeedRoutes from './routes/homeFeed.routes';
 import connectDB from './config/mongodb';
-import { IUserDataRequest } from './interfaces/requestHandler.interface';
+import { verifyAccessToken } from './utils/jwt';
 
 import { nothingFoundHandler, errorHandler } from './middleware';
 
 connectDB();
 
-//@ts-ignore
 const port = process.env.PORT || 3500;
 const app = express();
 
@@ -25,16 +24,6 @@ app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan('dev'));
-
-/* TEST */
-import { verifyAccessToken } from './utils/jwt';
-import { verify } from 'jsonwebtoken';
-app.get('/', verifyAccessToken, (req: IUserDataRequest, res: Response) => {
-  res
-    .status(200)
-    .json({ message: 'private route, successfully verified accesstoken' });
-});
-/* END TEST */
 
 app.use('/auth', authRoutes);
 app.use('/users', verifyAccessToken, userRoutes);
